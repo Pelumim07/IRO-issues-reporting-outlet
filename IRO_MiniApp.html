@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRO — Issues Reporting Outlet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14213D;
+    --ink-soft:#2C3A5E;
+    --paper:#F7F5F0;
+    --paper-raised:#FFFFFF;
+    --line:#DAD6CD;
+    --amber:#E3A008;
+    --amber-soft:#FCEFCB;
+    --teal:#2F6F4E;
+    --teal-soft:#DCEEE3;
+    --indigo-soft:#E4E8F3;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Space Grotesk', sans-serif;
+    letter-spacing:-0.01em;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    background:var(--ink);
+    color:var(--paper);
+    padding:28px 20px 24px;
+  }
+  .header-inner{
+    max-width:1000px;
+    margin:0 auto;
+  }
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--amber);
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  header h1{
+    font-size:clamp(24px,5vw,34px);
+    margin:0 0 6px;
+    font-weight:700;
+  }
+  header p{
+    margin:0;
+    color:#C7CEE0;
+    font-size:14px;
+    max-width:520px;
+    line-height:1.5;
+  }
+
+  /* ---------- LAYOUT ---------- */
+  main{
+    max-width:1000px;
+    margin:0 auto;
+    padding:24px 20px 60px;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:24px;
+  }
+  @media(min-width:860px){
+    main{grid-template-columns:0.9fr 1.1fr;align-items:start;}
+  }
+
+  .panel{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:2px;
+  }
+  .panel-head{
+    padding:16px 20px;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+  }
+  .panel-head h2{
+    font-size:16px;
+    margin:0;
+    font-weight:600;
+  }
+  .panel-head span{
+    font-size:11px;
+    color:#8A8578;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+  .panel-body{padding:20px;}
+
+  /* ---------- FORM ---------- */
+  label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    margin:0 0 6px;
+    color:var(--ink-soft);
+  }
+  .field{margin-bottom:16px;}
+  input, select, textarea{
+    width:100%;
+    font-family:'Work Sans', sans-serif;
+    font-size:14px;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:2px;
+    background:var(--paper);
+    color:var(--ink);
+  }
+  textarea{resize:vertical;min-height:80px;}
+  input:focus, select:focus, textarea:focus{
+    outline:2px solid var(--amber);
+    outline-offset:1px;
+  }
+  .row2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  button.submit{
+    width:100%;
+    background:var(--amber);
+    color:var(--ink);
+    border:none;
+    padding:13px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    border-radius:2px;
+    cursor:pointer;
+    margin-top:4px;
+  }
+  button.submit:hover{filter:brightness(0.94);}
+  .helper{
+    font-size:11.5px;
+    color:#8A8578;
+    margin-top:10px;
+    line-height:1.5;
+  }
+
+  /* ---------- LEDGER (signature element) ---------- */
+  .ledger{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+  }
+  .ticket{
+    display:flex;
+    border-bottom:1px solid var(--line);
+    position:relative;
+  }
+  .ticket:last-child{border-bottom:none;}
+  .tab{
+    width:6px;
+    flex-shrink:0;
+  }
+  .tab.security{background:#B23A48;}
+  .tab.infra{background:var(--amber);}
+  .tab.land{background:#6B4C9A;}
+  .tab.comms{background:var(--ink-soft);}
+  .tab.policy{background:#3A6EA5;}
+  .tab.other{background:#8A8578;}
+
+  .ticket-body{
+    padding:14px 16px;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .ticket-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .ticket-title{
+    font-weight:600;
+    font-size:14px;
+  }
+  .ticket-meta{
+    font-size:11.5px;
+    color:#8A8578;
+  }
+  .ticket-desc{
+    font-size:13px;
+    color:var(--ink-soft);
+    line-height:1.45;
+  }
+  .status{
+    font-size:11px;
+    font-weight:600;
+    padding:4px 9px;
+    border-radius:20px;
+    white-space:nowrap;
+    cursor:pointer;
+    border:none;
+    font-family:'Work Sans',sans-serif;
+  }
+  .status.pending{background:var(--amber-soft); color:#8A5A00;}
+  .status.review{background:var(--indigo-soft); color:var(--ink);}
+  .status.resolved{background:var(--teal-soft); color:var(--teal);}
+
+  .empty{
+    padding:40px 20px;
+    text-align:center;
+    color:#8A8578;
+    font-size:13px;
+  }
+
+  .id-tag{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:11px;
+    color:#8A8578;
+  }
+
+  footer{
+    text-align:center;
+    font-size:11.5px;
+    color:#8A8578;
+    padding:20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="eyebrow">AAUA · Community Intake</div>
+    <h1>IRO — Issues Reporting Outlet</h1>
+    <p>Report and track issues between AAUA students and the indigenes of Akungba, Iwaro, Etioro, and Ayegunle — logged, categorized, and followed up.</p>
+  </div>
+</header>
+
+<main>
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Submit an Issue</h2>
+      <span>Intake</span>
+    </div>
+    <div class="panel-body">
+      <form id="issueForm">
+        <div class="field">
+          <label for="reporter">You are a</label>
+          <select id="reporter" required>
+            <option value="">Select...</option>
+            <option>Student</option>
+            <option>Indigene</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="title">Issue title</label>
+          <input type="text" id="title" placeholder="e.g. Blocked drainage near hostel road" required>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label for="category">Category</label>
+            <select id="category" required>
+              <option value="">Select...</option>
+              <option value="security">Security</option>
+              <option value="infra">Infrastructure / Utilities</option>
+              <option value="land">Land / Property Dispute</option>
+              <option value="comms">Communication Gap</option>
+              <option value="policy">Institutional / Policy</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="community">Community</label>
+            <select id="community" required>
+              <option value="">Select...</option>
+              <option>Akungba</option>
+              <option>Iwaro</option>
+              <option>Etioro</option>
+              <option>Ayegunle</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="desc">Description</label>
+          <textarea id="desc" placeholder="Briefly describe what happened, where, and when." required></textarea>
+        </div>
+
+        <div class="field">
+          <label for="severity">Severity</label>
+          <select id="severity" required>
+            <option value="">Select...</option>
+            <option>Minor</option>
+            <option>Moderate</option>
+            <option>Serious</option>
+            <option>Critical</option>
+          </select>
+        </div>
+
+        <button type="submit" class="submit">Submit Issue</button>
+        <p class="helper">This is a prototype: entries are stored only for this session and reset on reload. A production build would persist reports to a shared database.</p>
+      </form>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Issue Ledger</h2>
+      <span id="countLabel">0 logged</span>
+    </div>
+    <div class="ledger" id="ledger">
+      <div class="empty" id="emptyState">No issues logged yet — submitted reports will appear here.</div>
+    </div>
+  </section>
+</main>
+
+<footer>IRO Prototype · CSC426 Weekly Dev · Weekend 3</footer>
+
+<script>
+  const categoryLabels = {
+    security: "Security",
+    infra: "Infrastructure / Utilities",
+    land: "Land / Property Dispute",
+    comms: "Communication Gap",
+    policy: "Institutional / Policy",
+    other: "Other"
+  };
+
+  const statusCycle = ["pending", "review", "resolved"];
+  const statusLabels = { pending: "Pending", review: "In Review", resolved: "Resolved" };
+
+  let issues = [];
+  let counter = 0;
+
+  const ledger = document.getElementById("ledger");
+  const emptyState = document.getElementById("emptyState");
+  const countLabel = document.getElementById("countLabel");
+  const form = document.getElementById("issueForm");
+
+  function render(){
+    ledger.querySelectorAll(".ticket").forEach(t => t.remove());
+    if(issues.length === 0){
+      emptyState.style.display = "block";
+    } else {
+      emptyState.style.display = "none";
+    }
+    issues.slice().reverse().forEach(issue => {
+      const ticket = document.createElement("div");
+      ticket.className = "ticket";
+      ticket.innerHTML = `
+        <div class="tab ${issue.category}"></div>
+        <div class="ticket-body">
+          <div class="ticket-top">
+            <div>
+              <div class="ticket-title">${issue.title}</div>
+              <div class="ticket-meta">
+                <span class="id-tag">#${issue.id}</span> · ${issue.reporter} · ${issue.community} · ${categoryLabels[issue.category]} · ${issue.severity}
+              </div>
+            </div>
+            <button class="status ${issue.status}" data-id="${issue.id}">${statusLabels[issue.status]}</button>
+          </div>
+          <div class="ticket-desc">${issue.desc}</div>
+        </div>
+      `;
+      ledger.appendChild(ticket);
+    });
+    countLabel.textContent = issues.length + " logged";
+
+    ledger.querySelectorAll(".status").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = Number(btn.dataset.id);
+        const issue = issues.find(i => i.id === id);
+        const idx = statusCycle.indexOf(issue.status);
+        issue.status = statusCycle[(idx + 1) % statusCycle.length];
+        render();
+      });
+    });
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    counter += 1;
+    issues.push({
+      id: counter,
+      reporter: document.getElementById("reporter").value,
+      title: document.getElementById("title").value,
+      category: document.getElementById("category").value,
+      community: document.getElementById("community").value,
+      desc: document.getElementById("desc").value,
+      severity: document.getElementById("severity").value,
+      status: "pending"
+    });
+    form.reset();
+    render();
+  });
+
+  render();
+</script>
+
+</body>
+</html>
